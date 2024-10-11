@@ -41,3 +41,9 @@ fn rocket() -> _ {
         .manage(prom::new())
         .mount("/", routes![index, metrics, ecowitt_report])
 }
+
+// see: [False positive "main function not found" with rocket #5975](https://github.com/intellij-rust/intellij-rust/issues/5975)
+// #[rocket::main]
+// async fn main() {
+//     let _ = rocket::build().mount("/", routes![index]).launch().await;
+// }
