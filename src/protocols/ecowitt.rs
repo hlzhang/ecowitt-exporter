@@ -1,4 +1,6 @@
-#[derive(FromForm)]
+use serde::Serialize;
+
+#[derive(FromForm, Serialize)]
 #[allow(non_snake_case)]
 #[allow(dead_code)]
 pub struct Report<'r> {
@@ -149,4 +151,77 @@ pub struct Report<'r> {
     pub soilmoisture8: Option<i64>,
     // CH8 battery level
     pub soilbatt8: Option<f64>,
+}
+
+impl<'r> Report<'r> {
+    pub fn ch_temp_mut(&mut self, i: usize) -> Option<&mut Option<f64>> {
+        match i {
+            1 => Some(&mut self.temp1f),
+            2 => Some(&mut self.temp2f),
+            3 => Some(&mut self.temp3f),
+            4 => Some(&mut self.temp4f),
+            5 => Some(&mut self.temp5f),
+            6 => Some(&mut self.temp6f),
+            7 => Some(&mut self.temp7f),
+            8 => Some(&mut self.temp8f),
+            _ => None,
+        }
+    }
+
+    pub fn ch_humidity_mut(&mut self, i: usize) -> Option<&mut Option<i64>> {
+        match i {
+            1 => Some(&mut self.humidity1),
+            2 => Some(&mut self.humidity2),
+            3 => Some(&mut self.humidity3),
+            4 => Some(&mut self.humidity4),
+            5 => Some(&mut self.humidity5),
+            6 => Some(&mut self.humidity6),
+            7 => Some(&mut self.humidity7),
+            8 => Some(&mut self.humidity8),
+            _ => None,
+        }
+    }
+
+    pub fn ch_batt_mut(&mut self, i: usize) -> Option<&mut Option<f64>> {
+        match i {
+            1 => Some(&mut self.batt1),
+            2 => Some(&mut self.batt2),
+            3 => Some(&mut self.batt3),
+            4 => Some(&mut self.batt4),
+            5 => Some(&mut self.batt5),
+            6 => Some(&mut self.batt6),
+            7 => Some(&mut self.batt7),
+            8 => Some(&mut self.batt8),
+            _ => None,
+        }
+    }
+
+    // Add methods to mutably access soil moisture and battery fields
+    pub fn soil_moisture_mut(&mut self, i: usize) -> Option<&mut Option<i64>> {
+        match i {
+            1 => Some(&mut self.soilmoisture1),
+            2 => Some(&mut self.soilmoisture2),
+            3 => Some(&mut self.soilmoisture3),
+            4 => Some(&mut self.soilmoisture4),
+            5 => Some(&mut self.soilmoisture5),
+            6 => Some(&mut self.soilmoisture6),
+            7 => Some(&mut self.soilmoisture7),
+            8 => Some(&mut self.soilmoisture8),
+            _ => None,
+        }
+    }
+
+    pub fn soil_battery_mut(&mut self, i: usize) -> Option<&mut Option<f64>> {
+        match i {
+            1 => Some(&mut self.soilbatt1),
+            2 => Some(&mut self.soilbatt2),
+            3 => Some(&mut self.soilbatt3),
+            4 => Some(&mut self.soilbatt4),
+            5 => Some(&mut self.soilbatt5),
+            6 => Some(&mut self.soilbatt6),
+            7 => Some(&mut self.soilbatt7),
+            8 => Some(&mut self.soilbatt8),
+            _ => None,
+        }
+    }
 }

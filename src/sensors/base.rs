@@ -1,8 +1,8 @@
-use rocket::form::Form;
 use rocket::State;
+use crate::protocols::ecowitt::Report;
 
 pub fn update_sensor_gauges(
-    report: &Form<super::super::protocols::ecowitt::Report<'_>>,
+    report: &Report<'_>,
     prom: &State<super::super::prom::PromObjects>,
 ) {
     // ignoring date_utc as it has too much cardinality

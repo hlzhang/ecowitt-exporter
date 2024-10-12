@@ -1,11 +1,10 @@
-use rocket::form::Form;
 use rocket::State;
 
 use crate::prom::PromObjects;
 use crate::protocols::ecowitt::Report;
 use crate::sensors::utils::{press_inhg_to_pa, temp_f_to_c};
 
-pub fn update_sensor_gauges(report: &Form<Report<'_>>, prom: &State<PromObjects>) {
+pub fn update_sensor_gauges(report: &Report<'_>, prom: &State<PromObjects>) {
     // Temperature
     match report.tempinf {
         Some(temp) => {

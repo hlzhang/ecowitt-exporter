@@ -1,11 +1,10 @@
-use rocket::form::Form;
 use rocket::State;
 
 use crate::prom::PromObjects;
 use crate::protocols::ecowitt::Report;
 use crate::sensors::utils::length_in_to_mm;
 
-pub fn update_sensor_gauges(report: &Form<Report<'_>>, prom: &State<PromObjects>) {
+pub fn update_sensor_gauges(report: &Report<'_>, prom: &State<PromObjects>) {
     // Rain rate
     match report.rainratein {
         Some(rate) => {
