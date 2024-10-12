@@ -11,6 +11,7 @@ use rocket::State;
 use reqwest::Client;
 
 use prometheus::{Encoder, TextEncoder};
+use rocket::log::LogLevel;
 use sensor_management::{SensorManager, init_sensor_manager, get_sensor_status, set_sensor_status};
 
 #[get("/")]
@@ -105,21 +106,23 @@ async fn ecowitt_report(
         }
     }
 
-    let forward_url = "http://cdnrtpdate.ecowitt.net/data/report/";
-    match client
-        .post(forward_url)
-        .header(reqwest::header::CONTENT_TYPE, "application/x-www-form-urlencoded")
-        .form(&filtered_report)
-        .send()
-        .await
-    {
-        Ok(response) => {
-            if !response.status().is_success() {
-                println!("Failed to forward data. Status: {}", response.status());
+    if !status.is_all_disabled() {
+        let forward_url = "http://cdnrtpdate.ecowitt.net/data/report/";
+        match client
+            .post(forward_url)
+            .header(reqwest::header::CONTENT_TYPE, "application/x-www-form-urlencoded")
+            .form(&filtered_report)
+            .send()
+            .await
+        {
+            Ok(response) => {
+                if !response.status().is_success() {
+                    println!("Failed to forward data. Status: {}", response.status());
+                }
             }
-        },
-        Err(e) => {
-            println!("Failed to forward data: {}", e);
+            Err(e) => {
+                println!("Failed to forward data: {}", e);
+            }
         }
     }
 }
@@ -127,6 +130,8 @@ async fn ecowitt_report(
 #[launch]
 fn rocket() -> _ {
     rocket::build()
+        .configure(rocket::Config::figment()
+            .merge(("log_level", LogLevel::Normal)))
         .manage(prom::new())
         .manage(Client::new())
         .manage(init_sensor_manager())

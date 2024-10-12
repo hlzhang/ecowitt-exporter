@@ -15,6 +15,12 @@ pub struct SensorStatus {
     pub other_sensors: bool,
 }
 
+impl SensorStatus {
+    pub fn is_all_disabled(&self) -> bool {
+        !self.indoor_sensors && !self.rain_gauge && !self.soil_sensors && !self.other_sensors
+    }
+}
+
 impl Default for SensorStatus {
     fn default() -> Self {
         SensorStatus {

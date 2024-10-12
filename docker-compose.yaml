@@ -1,0 +1,15 @@
+
+#docker-compose build --no-cache
+services:
+  ecowitt_exporter:
+    build: .
+    container_name: ecowitt_exporter
+    ports:
+      - "${ROCKET_PORT:-8002}:${ROCKET_PORT:-8002}"
+    environment:
+      - ROCKET_ADDRESS=${ROCKET_ADDRESS:-0.0.0.0}
+      - ROCKET_PORT=${ROCKET_PORT:-8002}
+      - ROCKET_CLI_COLORS=true
+      - RUST_LOG=normal
+    volumes:
+      - ./data:/data
