@@ -1,9 +1,13 @@
 
-#docker system prune -f
-#docker-compose build --no-cache
 services:
   ecowitt_exporter:
-    build: .
+    image: "ecowitt-exporter:${SOURCE_REVISION:?run build-image.sh}"
+    build:
+      context: .
+      args:
+        VCS_REF: "${SOURCE_REVISION:?run build-image.sh}"
+        BUILD_VERSION: "${BUILD_VERSION:?run build-image.sh}"
+        DEBIAN_SNAPSHOT: "${DEBIAN_SNAPSHOT:-20261118T000000Z}"
     container_name: ecowitt_exporter
     ports:
       - "${ROCKET_PORT:-8002}:${ROCKET_PORT:-8002}"
@@ -12,7 +16,6 @@ services:
       - ROCKET_PORT=${ROCKET_PORT:-8002}
       - ROCKET_CLI_COLORS=true
       - RUST_LOG=normal
-    #find /var/lib/docker/containers/ -type f -name "*.log" -delete
     logging:
       driver: "json-file"
       options:

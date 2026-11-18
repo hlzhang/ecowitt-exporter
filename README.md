@@ -29,3 +29,20 @@ Do note that in the event of sensor failure, like if its battery is exhausted, t
 its last received metrics. After some time, it will declare the sensor dead and stop sending those metrics. Only at 
 this point will metrics be culled from the exporter. No attempt will be made by this program to detect the situation 
 beforehand.
+
+## Reproducible container build
+
+`build-image.sh` refuses a dirty worktree, derives the image tag and OCI
+revision label from the checked-out Git commit, uses `Cargo.lock`, pins both
+base-image digests and installs exact packages from a dated Debian snapshot.
+The Docker build context excludes `.git`, local data, IDE files and environment
+files.
+
+```sh
+./build-image.sh
+SOURCE_REVISION=$(git rev-parse HEAD) BUILD_VERSION=0.1.0 docker compose config
+```
+
+Deployment keeps `./data` outside the image. Back up and restore that directory
+separately; never copy it into an image layer. Verify the revision label before
+replacing a running container.
